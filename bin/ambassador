@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require "ambassadr/cli"
+Ambassadr::CLI.new(ARGV).run

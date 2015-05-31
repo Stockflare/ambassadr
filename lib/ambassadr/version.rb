@@ -1,3 +1,3 @@
-module Publishr
+module Ambassadr
   VERSION = "0.0.1"
 end

@@ -1,4 +1,0 @@
-#!/usr/bin/env ruby
-
-require "publishr/cli"
-Publishr::CLI.new(ARGV).run

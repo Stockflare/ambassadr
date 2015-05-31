@@ -1,6 +1,6 @@
-require 'publishr'
+require 'ambassadr'
 
-module Publishr
+module Ambassadr
   class CLI
 
     attr_reader :argv
