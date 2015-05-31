@@ -11,9 +11,13 @@ module Ambassadr
 
     def run
 
+      Ambassadr.env!
+
       main = fork &method(:main)
 
-      Process.detach publish = fork(&method(:publish))
+      # Process.detach publish = fork(&method(:publish))
+
+      Process.detach publish = fork(&Ambassadr.method(:publish!))
 
       trap("CLD") { try_sig(:HUP, main) || try_sig(:HUP, publish) }
 
@@ -36,9 +40,10 @@ module Ambassadr
       end
     end
 
-    def publish
-      10.times { puts "here"; sleep 1; }
-    end
+    # def publish
+    #   container = Container.new
+    #   Publisher.new({ prefix: ENV['AMBASSADR_PREFIX'] }).publish container
+    # end
 
     private
 
