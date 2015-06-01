@@ -23,7 +23,7 @@ module Ambassadr
   end
 
   def self.publish!
-    Publisher.new(ENV['PUBLISHER_PATH']).publish Container.new
+    Publisher.new(Container.new, ENV['PUBLISHER_PATH'])
   end
 
 end

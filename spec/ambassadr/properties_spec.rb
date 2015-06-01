@@ -29,11 +29,13 @@ module Ambassadr
 
       let(:a_key) { Faker::Internet.domain_word }
 
-      let(:a_value) { Random.rand(123) }
+      let(:a_value) { Random.rand(123); sleep 1 }
 
-      subject { properties.set(a_key, a_value) }
+      before { @resp = subject.set(a_key, a_value) }
 
-      it { should be_truthy }
+      specify { expect(@resp).to be_truthy }
+
+      specify { expect { subject.set(a_key, a_value + 1) }.to change { properties.get(a_key) } }
 
     end
 
@@ -45,8 +47,6 @@ module Ambassadr
 
       before { subject.set(a_key, a_value) }
 
-      it { should be_truthy }
-
       specify { expect(subject.get(a_key)).to eq a_value }
 
     end
@@ -57,7 +57,7 @@ module Ambassadr
 
       it { should be_a String }
 
-      it { should eq Properties.new.send(:default_path) }
+      it { should eq Properties::DEFAULT_PATH }
 
     end
 

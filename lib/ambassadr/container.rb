@@ -9,20 +9,26 @@ module Ambassadr
       @ident ||= ident || hostname
     end
 
-    def service
-      label_for :service
+    def services
+      services = labels.keep_if { |key| key.to_s.match(/\Aambassadr\.services\..+\Z/i) }
+      Hash[services.map do |k, v|
+        [
+          k.gsub(/\Aambassadr\.services\./, '').gsub('.','/'),
+          ports[parse_val(v)]
+        ]
+      end]
     rescue
-      "default"
+      raise "error determining services to ambassador"
     end
 
     def host
-      label_for :host
+      @host ||= label_for :host
     rescue
-      "localhost"
+      '0.0.0.0'
     end
 
     def ports
-      @ports ||= port_json.values.collect { |port| port[0]['HostPort'].to_i }
+      @ports ||= Hash[json['NetworkSettings']['Ports'].map { |k, v| [k, v[0]['HostPort']] }]
     end
 
     def hostname
@@ -31,42 +37,45 @@ module Ambassadr
 
     private
 
-    def container
-      @container ||= Docker::Container.get ident
-    end
-
-    def port_json
-      json['NetworkSettings']['Ports']
-    rescue
-      {}
-    end
-
-    def json
-      container.json
-    rescue
-      {}
-    end
-
-    def labels
-      @labels ||= json['Config']['Labels']
-    end
-
     def label_for(key)
       if val = labels["ambassadr.#{key}"]
-        send(*val.split(':'))
+        parse_val val
       else
         raise "missing #{key} label"
       end
     end
 
-    def env(key)
-      envs = json['Config']['Env']
-      key, val = envs[envs.index { |i| i.match key.upcase }].split('=')
+    def parse_val(val)
+      send *val.split(':')
+    rescue
       val
     end
 
-    def val(str)
-      str
+    def env(key)
+      if env = ENV[key]
+        env
+      else
+        noop, val = envs[envs.index { |i| i.match key.upcase }].split('=')
+        val
+      end
+    end
+
+    def container
+      @container ||= Docker::Container.get ident
+    end
+
+    def json
+      container.json.dup
+    rescue
+      {}
+    end
+
+    def labels
+      json['Config']['Labels']
+    end
+
+    def envs
+      json['Config']['Env']
     end
 
   end

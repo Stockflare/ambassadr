@@ -1,10 +1,12 @@
 module Ambassadr
   class Properties
 
+    DEFAULT_PATH = '/properties/shared'
+
     attr_reader :path
 
     def initialize(path = nil)
-      @path = path || default_path
+      @path = path || DEFAULT_PATH
     end
 
     def inject_into(obj = {}, &block)
@@ -53,10 +55,6 @@ module Ambassadr
       {}
     else
       memo
-    end
-
-    def default_path
-      '/properties/shared'
     end
 
     def etcd

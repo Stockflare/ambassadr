@@ -93,3 +93,7 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
+
+RSpec::Matchers.define :one_of do |arr|
+  match { |actual| arr.include? actual }
+end

@@ -6,8 +6,8 @@ module Ambassadr
         'Cmd' => ['sleep', '20'],
         'Image' => 'ambassadr/test',
         'ExposedPorts' => {
-          '2222/tcp' => {},
-          '4444/tcp' => {}
+          '2345' => {},
+          '4444' => {}
         }
       })
     end
@@ -24,7 +24,7 @@ module Ambassadr
 
     subject { container }
 
-    it { should respond_to(:service) }
+    it { should respond_to(:services) }
 
     it { should respond_to(:ports) }
 
@@ -54,15 +54,17 @@ module Ambassadr
 
     end
 
-    describe 'return value of #service' do
+    describe 'return value of #services' do
 
-      subject { container.service }
+      subject { container.services }
 
-      it { should be_a String }
+      it { should be_a Hash }
 
       it { should_not be_empty }
 
-      it { should eq 'test' }
+      specify { expect(subject.keys).to include "foo", "internal/user" }
+
+      specify { expect(subject.values.sample).to match /\A[0-9]+\Z/ }
 
     end
 
@@ -70,9 +72,11 @@ module Ambassadr
 
       subject { container.ports }
 
-      it { should be_a Array }
+      it { should be_a Hash }
 
       it { should_not be_empty }
+
+      specify { expect(subject.keys).to include "2345", "4444" }
 
     end
 
