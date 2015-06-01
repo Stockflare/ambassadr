@@ -16,6 +16,17 @@ module Ambassadr
       end
     end
 
+    def set(key, value, options = {})
+      etcd.set("#{path}/#{key}", options.merge(value: value))
+      true
+    rescue
+      false
+    end
+
+    def get(key)
+      etcd.get("#{path}/#{key}").value
+    end
+
     def properties
       @properties ||= extract({}, values)
     end

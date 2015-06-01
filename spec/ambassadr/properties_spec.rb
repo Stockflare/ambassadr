@@ -17,9 +17,39 @@ module Ambassadr
 
     it { should respond_to(:path) }
 
+    it { should respond_to(:get) }
+
+    it { should respond_to(:set) }
+
     it { should respond_to(:properties) }
 
     specify { expect { subject.values }.to_not raise_error }
+
+    describe 'when #set is called' do
+
+      let(:a_key) { Faker::Internet.domain_word }
+
+      let(:a_value) { Random.rand(123) }
+
+      subject { properties.set(a_key, a_value) }
+
+      it { should be_truthy }
+
+    end
+
+    describe 'when #get is called' do
+
+      let(:a_key) { Faker::Internet.domain_word }
+
+      let(:a_value) { Random.rand(123).to_s }
+
+      before { subject.set(a_key, a_value) }
+
+      it { should be_truthy }
+
+      specify { expect(subject.get(a_key)).to eq a_value }
+
+    end
 
     describe 'the default path' do
 
