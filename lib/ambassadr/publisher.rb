@@ -1,10 +1,10 @@
 module Ambassadr
   class Publisher
 
-    attr_reader :options
+    attr_reader :path
 
-    def initialize(options = {})
-      @options = options
+    def initialize(path = nil)
+      @path = path || default_path
     end
 
     def publish(container)
@@ -13,7 +13,7 @@ module Ambassadr
 
     private
 
-    def prefix
+    def default_path
       '/services'
     end
 

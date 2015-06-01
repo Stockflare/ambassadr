@@ -7,6 +7,8 @@ module Ambassadr
 
     def initialize(argv = [])
       @argv = argv.dup
+      configure_docker!
+      configure_etcd!
     end
 
     def run
@@ -14,8 +16,6 @@ module Ambassadr
       Ambassadr.env!
 
       main = fork &method(:main)
-
-      # Process.detach publish = fork(&method(:publish))
 
       Process.detach publish = fork(&Ambassadr.method(:publish!))
 
@@ -40,12 +40,22 @@ module Ambassadr
       end
     end
 
-    # def publish
-    #   container = Container.new
-    #   Publisher.new({ prefix: ENV['AMBASSADR_PREFIX'] }).publish container
-    # end
-
     private
+
+    def configure_docker!
+      docker = argv.index("-docker")
+      return nil unless docker
+      argv.delete_at docker
+      Ambassadr.docker_url = argv.delete_at(docker)
+    end
+
+    def configure_etcd!
+      etcd = argv.index("-etcd")
+      return nil unless etcd
+      argv.delete_at etcd
+      host, port = argv.delete_at(etcd).split(':')
+      Ambassadr.etcd host: host, port: port
+    end
 
     def try_sig(sig, pid)
       Process.kill(sig, pid)

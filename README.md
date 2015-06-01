@@ -1,29 +1,11 @@
 # ambassadr
 
-TODO: Write a gem description
+This gem makes use of Docker and ETCD to ambassador any program ran within it.
 
-## Installation
+Assuming some defaults, providing an ambassador for your application is as simple as running: `$ docker run -d -P my-company/api ambassador rackup`
 
-Add this line to your application's Gemfile:
+This will publish your service in a discoverable manner to ETCD, whilst injecting cloud configuration based upon some sensible defaults into your application.
 
-    gem 'ambassadr'
+---
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install ambassadr
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Contributing
-
-1. Fork it ( https://github.com/bruw/ambassadr/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+Work in progress...
