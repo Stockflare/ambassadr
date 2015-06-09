@@ -1,0 +1,17 @@
+etcd:
+  image: microbox/etcd
+  command: "-n etcd"
+  ports:
+    - "4001:4001"
+bruw:
+  build: .
+  command: env
+  environment:
+    HOST_IP: 127.0.0.1
+  ports:
+    - "2345"
+  volumes:
+    - .:/bruw
+    - /var/run/docker.sock:/var/run/docker.sock
+  links:
+    - etcd

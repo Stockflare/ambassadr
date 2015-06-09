@@ -89,7 +89,7 @@ module Ambassadr
   #
   # @return nil
   def self.publish!
-    Publisher.new(Container.new, ENV['PUBLISHER_PATH'])
+    Publisher.new(Container.new, ENV['PUBLISHER_PATH']).publish
   end
 
 end

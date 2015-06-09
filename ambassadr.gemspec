@@ -30,5 +30,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency %q<rspec>, ['~> 3.0']
   spec.add_development_dependency %q<faker>, ['~> 1.4']
   spec.add_development_dependency %q<yard>, ['~> 0.8']
+  spec.add_development_dependency %q<dotenv>, ['~> 2.0']
 
 end

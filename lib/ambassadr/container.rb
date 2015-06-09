@@ -10,13 +10,11 @@ module Ambassadr
     end
 
     def services
-      services = labels.keep_if { |key| key.to_s.match(/\Aambassadr\.services\..+\Z/i) }
-      Hash[services.map do |k, v|
-        [
-          k.gsub(/\Aambassadr\.services\./, '').gsub('.','/'),
-          ports[parse_val(v)]
-        ]
-      end]
+      if (mapped = mapped_services).any?
+        Hash[mapped]
+      else
+        {}
+      end
     rescue
       raise "error determining services to ambassador"
     end
@@ -28,7 +26,15 @@ module Ambassadr
     end
 
     def ports
-      @ports ||= Hash[json['NetworkSettings']['Ports'].map { |k, v| [k, v[0]['HostPort']] }]
+      @ports ||= Hash[json['NetworkSettings']['Ports'].map do |key, val|
+        service_port = key.match(/[0-9]{4,}/).to_s
+        begin
+          [service_port, v[0]['HostPort']]
+        rescue
+          [service_port, nil]
+        end
+      end]
+      @ports
     end
 
     def hostname
@@ -36,6 +42,17 @@ module Ambassadr
     end
 
     private
+
+    def mapped_services
+      services = labels.keep_if { |key| key.to_s.match(/\Aambassadr\.services\..+\Z/i) }
+      services.map do |label, val|
+        if port = ports[parse_val(val)]
+          [label.gsub(/\Aambassadr\.services\./, '').gsub('.','/'), port]
+        else
+          nil
+        end
+      end.compact!
+    end
 
     def label_for(key)
       if val = labels["ambassadr.#{key}"]
@@ -66,8 +83,6 @@ module Ambassadr
 
     def json
       container.json.dup
-    rescue
-      {}
     end
 
     def labels
