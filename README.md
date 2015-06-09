@@ -105,7 +105,7 @@ Connecting to the Docker API, Ambassador will then lookup the container it is ru
 
 ### Accessing services programatically?
 
-Now that our "base" service is being published, lets make use of the Ambassadr gem within our the API itself. Given the following class inside a similar, but different API service:
+Now that our "base" service is being published, lets make use of the Ambassadr gem to access the service through code. Given the following class inside a similar, but different API service:
 
 ```
 module UserAPI

@@ -14,8 +14,11 @@ require 'docker'
 # It is capable of "wrapping" any executable within a forked process and publishing
 # any described endpoints to Etcd, using the Docker Daemon API. The best use case
 # for this is running an API inside the gem, such like
-# `$ docker run -v /var/run/docker.sock:/var/run/docker.sock -d my-company/api ambassador rackup -etcd localhost:4001 -docker unix:///var/run/docker.sock`.
+#   `$ docker run -v /var/run/docker.sock:/var/run/docker.sock \
+#    -d my-company/api ambassador rackup -etcd localhost:4001 \
+#    -docker unix:///var/run/docker.sock`
 #
+# Ambassador makes use of the LABEL definition within the Dockerfile
 module Ambassadr
 
   # Set the access URL for Ambassadr to create connections to the Docker
