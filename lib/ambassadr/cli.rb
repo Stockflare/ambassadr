@@ -46,15 +46,14 @@ module Ambassadr
       docker = argv.index("-docker")
       return nil unless docker
       argv.delete_at docker
-      Ambassadr.docker_url = argv.delete_at(docker)
+      Ambassadr.docker_url argv.delete_at(docker)
     end
 
     def configure_etcd!
       etcd = argv.index("-etcd")
       return nil unless etcd
       argv.delete_at etcd
-      host, port = argv.delete_at(etcd).split(':')
-      Ambassadr.etcd host: host, port: port
+      Ambassadr.etcd argv.delete_at(etcd)
     end
 
     def try_sig(sig, pid)

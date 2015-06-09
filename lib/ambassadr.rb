@@ -57,13 +57,13 @@ module Ambassadr
   #
   # @see https://github.com/ranjib/etcd-ruby#create-a-client-object
   #
-  # @param [hash] options to set for the Etcd client
+  # @param [string] url to access the Etcd API through
   #
   # @return An Etcd client to be used to connect to the Etcd API
-  def self.etcd(options = {})
-    options[:host] ||= ENV['ETCD_HOST']
-    options[:port] ||= ENV['ETCD_PORT']
-    @etcd ||= Etcd.client options
+  def self.etcd(url = "")
+    url = (ENV['ETCD_URL'] || '') if url.empty?
+    host, port = url.split(/:/)
+    @etcd ||= Etcd.client host: host, port: port
   end
 
   # Inject shared Ambassadr properties into the ENV variable.
