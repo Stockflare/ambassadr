@@ -5,11 +5,12 @@ etcd:
     - "4001:4001"
 bruw:
   build: .
-  command: env
+  command: rspec
   environment:
     HOST_IP: 127.0.0.1
   ports:
-    - "2345"
+    - "4444:4444"
+    - "2345:2345"
   volumes:
     - .:/bruw
     - /var/run/docker.sock:/var/run/docker.sock

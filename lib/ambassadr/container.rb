@@ -29,12 +29,11 @@ module Ambassadr
       @ports ||= Hash[json['NetworkSettings']['Ports'].map do |key, val|
         service_port = key.match(/[0-9]{4,}/).to_s
         begin
-          [service_port, v[0]['HostPort']]
+          [service_port, val[0]['HostPort']]
         rescue
           [service_port, nil]
         end
       end]
-      @ports
     end
 
     def hostname
@@ -46,12 +45,8 @@ module Ambassadr
     def mapped_services
       services = labels.keep_if { |key| key.to_s.match(/\Aambassadr\.services\..+\Z/i) }
       services.map do |label, val|
-        if port = ports[parse_val(val)]
-          [label.gsub(/\Aambassadr\.services\./, '').gsub('.','/'), port]
-        else
-          nil
-        end
-      end.compact!
+        [label.gsub(/\Aambassadr\.services\./, '').gsub('.','/'), ports[parse_val(val)]]
+      end
     end
 
     def label_for(key)

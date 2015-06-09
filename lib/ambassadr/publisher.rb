@@ -21,13 +21,13 @@ module Ambassadr
     end
 
     def publish_once
-      container.services.each { |k, v| publish_service(k, v) }
+      container.services.each { |name, port| publish_service(name, port) }
     end
 
     private
 
     def publish_service(name, port)
-      properties.set key(name), value(port), ttl: TTL
+      properties.set key(name), value(port), ttl: TTL if port
     end
 
     def key(name)
