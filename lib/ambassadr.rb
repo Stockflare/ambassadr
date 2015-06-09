@@ -27,20 +27,33 @@ module Ambassadr
   # @note Used through the CLI, this option is exposed through
   #   the `-docker` property.
   #
+  # @note A client will also be created using `ENV['ETCD_HOST']` and
+  #   `ENV['ETCD_PORT']` if they are set.
+  #
+  # @note The first call to this method will create a client, subsequent calls
+  #   will simply return the client.
+  #
   # @see https://github.com/swipely/docker-api#host
   #
   # @param [string] url to access the Docker Daemon API through
   #
   # @return [string] the url being used to access the Docker daemon
   def self.docker_url(url = "")
+    url = (ENV['DOCKER_URL'] || '') if url.empty?
     Docker.url = url
   end
 
-  # Set the client connection options for Ambassadr to use to create
+  # Retrieve an Etcd client connection options for Ambassadr to use to create
   # a connection with Etcd.
   #
   # @note Used through the CLI, this option is exposed through
   #   the `-etcd` property. Expressed as "127.0.0.1:4001"
+  #
+  # @note A client will also be created using `ENV['ETCD_HOST']` and
+  #   `ENV['ETCD_PORT']` if they are set.
+  #
+  # @note The first call to this method will create a client, subsequent calls
+  #   will simply return the client.
   #
   # @see https://github.com/ranjib/etcd-ruby#create-a-client-object
   #
@@ -48,6 +61,8 @@ module Ambassadr
   #
   # @return An Etcd client to be used to connect to the Etcd API
   def self.etcd(options = {})
+    options[:host] ||= ENV['ETCD_HOST']
+    options[:port] ||= ENV['ETCD_PORT']
     @etcd ||= Etcd.client options
   end
 
