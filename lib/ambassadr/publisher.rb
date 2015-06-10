@@ -7,7 +7,7 @@ module Ambassadr
 
     attr_reader :properties, :container
 
-    def initialize(container, path = nil)
+    def initialize(container, path = ENV['PUBLISHER_PATH'])
       raise TypeError unless container.is_a? Container
       @properties = Properties.new(path || DEFAULT_PATH)
       @container = container

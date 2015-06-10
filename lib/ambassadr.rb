@@ -1,7 +1,4 @@
 require 'ambassadr/version'
-require 'ambassadr/container'
-require 'ambassadr/publisher'
-require 'ambassadr/properties'
 
 require 'etcd'
 require 'docker'
@@ -20,6 +17,11 @@ require 'docker'
 #
 # Ambassador makes use of the LABEL definition within the Dockerfile
 module Ambassadr
+
+  autoload :Container, 'ambassadr/container'
+  autoload :Publisher, 'ambassadr/publisher'
+  autoload :Properties, 'ambassadr/properties'
+  autoload :Services, 'ambassadr/services'
 
   # Set the access URL for Ambassadr to create connections to the Docker
   # daemon running on this host.
@@ -77,7 +79,7 @@ module Ambassadr
   #
   # @return [hash] collection of keys and values injected into the environment.
   def self.env!
-    Properties.new(ENV['PROPERTIES_PATH']).inject_into ENV do |obj, key, val|
+    Properties.new.inject_into ENV do |obj, key, val|
       obj[key.gsub('/', '_').upcase]
     end
   end
@@ -89,7 +91,7 @@ module Ambassadr
   #
   # @return nil
   def self.publish!
-    Publisher.new(Container.new, ENV['PUBLISHER_PATH']).publish
+    Publisher.new(Container.new).publish
   end
 
 end

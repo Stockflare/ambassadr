@@ -5,7 +5,7 @@ module Ambassadr
 
     attr_reader :path
 
-    def initialize(path = nil)
+    def initialize(path = ENV['PROPERTIES_PATH'])
       @path = path || DEFAULT_PATH
     end
 

@@ -20,7 +20,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.required_ruby_version = Gem::Requirement.new(">= 2.0.0")
 
-  spec.add_runtime_dependency %q<activesupport>, ['~> 4.2']
   spec.add_runtime_dependency %q<faraday>, ['~> 0.9']
   spec.add_runtime_dependency %q<etcd>, ['~> 0.3']
   spec.add_runtime_dependency %q<docker-api>, ['~> 1.21']
