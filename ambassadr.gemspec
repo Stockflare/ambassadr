@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency %q<faraday>, ['~> 0.9']
   spec.add_runtime_dependency %q<etcd>, ['~> 0.3']
+  spec.add_runtime_dependency %q<hashie>, ['~> 3.4']
   spec.add_runtime_dependency %q<docker-api>, ['~> 1.21']
 
   spec.add_development_dependency %q<bundler>, ['~> 1.6']

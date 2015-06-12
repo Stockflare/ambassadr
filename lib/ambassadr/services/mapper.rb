@@ -30,7 +30,7 @@ module Ambassadr
         end
 
         def method_missing(name, *args, &block)
-          Transport.new "#{_path}/#{name}", *args, &block
+          Transport.new _path, name, *args, &block
         end
 
         private
@@ -54,23 +54,23 @@ module Ambassadr
         end
 
         def _path
-          self.class._path context
+          self.class._path
         end
 
         def method_missing(name, *args, &block)
-          transport "#{_path}/#{name}", *args, &block
+          transport "#{context}/#{name}", *args, &block
         end
 
-        { update: :patch, delete: :delete }.each do |name, type|
+        { update: :put, delete: :delete }.each do |name, type|
           define_method(name) do |attrs = {}, &block|
-            transport _path, attrs, method: type, &block
+            transport context, attrs, method: type, &block
           end
         end
 
         private
 
         def transport(*args, &block)
-          Transport.new *args, &block
+          Transport.new _path, *args, &block
         end
 
       end
