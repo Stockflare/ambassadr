@@ -16,9 +16,14 @@ module Ambassadr
       end
 
       def response
-        @response ||= handler Faraday.new(url: "#{protocol}://#{host}").send(method, path) do |req|
-          req.params = body if get?
-          req.body = body if post? || patch?
+        unless @response
+          resp = Faraday.new(url: "#{protocol}://#{host}").send(method, path) do |req|
+            req.params = body if get?
+            req.body = body if post? || patch?
+          end
+          @response = handler resp
+        else
+          @response
         end
       rescue => e
         retry if hosts.any?
@@ -56,11 +61,11 @@ module Ambassadr
       alias_method :put?, :patch?
 
       def method
-        opts[:method] || :get
+        (opts[:method] || :get).to_s.downcase.to_sym
       end
 
       def protocol
-        opts[:protocol] || :http
+        (opts[:protocol] || :http).to_s.downcase.to_sym
       end
 
       private

@@ -32,7 +32,7 @@ describe Services do
 
     let(:value) { Faker::Internet.ip_v4_address }
 
-    before { @response = subject.update({ value: value, ttl: 10 }).response }
+    before { subject.update({ value: value }).response }
 
     specify { expect(Ambassadr.etcd.get("/#{key}").value).to eq value }
 

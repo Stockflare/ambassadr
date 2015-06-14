@@ -51,7 +51,7 @@ describe Services do
 
       let(:args) { [opts] }
 
-      specify { expect(Services::Transport).to receive(:new).with(path, sub, opts, hash_including(method: :patch)) }
+      specify { expect(Services::Transport).to receive(:new).with(path, sub, opts, hash_including(method: :put)) }
 
     end
 
