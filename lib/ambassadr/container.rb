@@ -20,7 +20,7 @@ module Ambassadr
     end
 
     def host
-      @host ||= label_for :host
+      @host ||= label_value_for :host
     rescue
       '0.0.0.0'
     end
@@ -49,7 +49,7 @@ module Ambassadr
       end
     end
 
-    def label_for(key)
+    def label_value_for(key)
       if val = labels["ambassadr.#{key}"]
         parse_val val
       else
