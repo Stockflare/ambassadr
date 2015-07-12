@@ -86,7 +86,7 @@ module Ambassadr
       obj[key.gsub('/', '_').upcase]
     end
   rescue
-    $stderr.puts 'Unable to inkect shared properties into environment'
+    $stderr.puts 'Unable to inject shared properties into environment'
   end
 
   # Publishes the container that Ambassadr is running inside of to Etcd,

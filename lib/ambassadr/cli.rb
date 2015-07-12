@@ -13,13 +13,13 @@ module Ambassadr
 
     def run
 
+      Ambassadr.set_retry will_retry?
+
       Ambassadr.env!
 
       main = fork &method(:main)
 
-      # Process.detach publish = fork(&Ambassadr.method(:publish!))
-
-      Process.detach publish = fork(&Ambassadr.publish!(will_retry?))
+      Process.detach publish = fork(&Ambassadr.method(:publish!))
 
       trap("CLD") { try_sig(:HUP, main) || try_sig(:HUP, publish) }
 
