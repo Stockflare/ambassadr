@@ -17,7 +17,9 @@ module Ambassadr
 
       main = fork &method(:main)
 
-      Process.detach publish = fork(&Ambassadr.method(:publish!))
+      # Process.detach publish = fork(&Ambassadr.method(:publish!))
+
+      Process.detach publish = fork(&Ambassadr.publish!(will_retry?))
 
       trap("CLD") { try_sig(:HUP, main) || try_sig(:HUP, publish) }
 
@@ -41,6 +43,10 @@ module Ambassadr
     end
 
     private
+
+    def will_retry?
+      argv.index("-retry")
+    end
 
     def configure_docker!
       docker = argv.index("-docker")

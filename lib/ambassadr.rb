@@ -77,21 +77,61 @@ module Ambassadr
   # @note Setting `ENV['PROPERTIES_PATH']` modifies the base path used to inject
   #   properties into the environment.
   #
+  # @note If properties could not be found or injected, this method will puts
+  #   to $stderr.
+  #
   # @return [hash] collection of keys and values injected into the environment.
   def self.env!
     Properties.new.inject_into ENV do |obj, key, val|
       obj[key.gsub('/', '_').upcase]
     end
+  rescue
+    $stderr.puts 'Unable to inkect shared properties into environment'
   end
 
   # Publishes the container that Ambassadr is running inside of to Etcd,
   # maintaining an access point based upon the service it is an ambassador of.
   #
-  # @note This method is blocks.
+  # @note This method is blocking.
+  #
+  # @note If the will_retry? method is truthy, this method will attempt to retry
+  #   execution up to a maximum of 5 times, failing with a message to stderr
+  #   if execution fails after 5 attempts within 300 seconds.
+  #
+  # @param [boolean] retry the execution of this method if it fails?
   #
   # @return nil
   def self.publish!
-    Publisher.new(Container.new).publish
+    attempts = []
+    begin
+      Publisher.new(Container.new).publish
+    rescue
+      if Ambassadr.will_retry?
+        if attempts.count < 5
+          attempts << Time.now.utc.to_i
+          sleep 10
+          retry
+        else
+          if attempts.each_cons(2).map { |a,b| b-a }.inject(:+) > 60 * 5
+            attempts = [Time.now.utc.to_i]
+            sleep 10
+            retry
+          end
+        end
+      end
+      $stderr.puts "unable to publish container services to etcd"
+    end
+  end
+
+  # Configure Ambassadr to retry the publishing of container services
+  # upon failure to do so. If retrying is enabled, Ambassadr will attempt
+  # to re-publish container services if it cannot do so at a specific iteration
+  def self.set_retry(retrying)
+    @@retry = retrying
+  end
+
+  def self.will_retry?
+    @@retry
   end
 
 end
