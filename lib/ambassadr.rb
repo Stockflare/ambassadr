@@ -82,8 +82,8 @@ module Ambassadr
     Properties.new.inject_into ENV do |obj, key, val|
       obj[key.gsub('/', '_').upcase]
     end
-  # rescue
-  #   $stderr.puts 'Unable to inject shared properties into environment'
+  rescue
+    $stderr.puts 'Unable to inject shared properties into environment'
   end
 
   # Publishes the container that Ambassadr is running inside of to Etcd,
