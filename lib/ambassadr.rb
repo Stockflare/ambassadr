@@ -29,9 +29,6 @@ module Ambassadr
   # @note Used through the CLI, this option is exposed through
   #   the `-docker` property.
   #
-  # @note A client will also be created using `ENV['ETCD_HOST']` and
-  #   `ENV['ETCD_PORT']` if they are set.
-  #
   # @note The first call to this method will create a client, subsequent calls
   #   will simply return the client.
   #
@@ -85,8 +82,8 @@ module Ambassadr
     Properties.new.inject_into ENV do |obj, key, val|
       obj[key.gsub('/', '_').upcase]
     end
-  rescue
-    $stderr.puts 'Unable to inject shared properties into environment'
+  # rescue
+  #   $stderr.puts 'Unable to inject shared properties into environment'
   end
 
   # Publishes the container that Ambassadr is running inside of to Etcd,
